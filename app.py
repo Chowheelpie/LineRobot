@@ -20,21 +20,17 @@ genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 def get_ai_response(user_input, mode="auto"):
-    if mode == "translate":
-        prompt = f"請將這段文字翻譯成地道的英文，並提供兩種語氣風格（正式與非正式）：'{user_input}'"
-    else:
-        prompt = f"""
-        你是一個友善的英文家教，正在 LINE 群組中協助學生。
-        使用者訊息：'{user_input}'
+    try:
+        if mode == "translate":
+            prompt = f"請將這段文字翻譯成地道的英文，並提供兩種語氣風格（正式與非正式）：'{user_input}'"
+        else:
+            prompt = f"你是一個英文家教。使用者說：'{user_input}'。如果是英文，請翻譯成中文並給出優化建議；如果是中文，請翻譯成英文。"
         
-        任務：
-        1. 如果是英文，請先翻譯成中文，並檢查有無文法錯誤。
-        2. 若有更道地（Native）的表達方式，請用 '💡 建議說法：' 條列出來。
-        3. 如果訊息太短（如：Hello, OK），則簡單打招呼即可，不用過度分析。
-        """
-    
-    response = model.generate_content(prompt)
-    return response.text
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        print(f"AI 發生錯誤: {e}")
+        return "抱歉，我的 AI 大腦暫時斷線了，請稍後再試！"
 
 @app.route("/callback", methods=['POST'])
 def callback():
