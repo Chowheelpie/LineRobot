@@ -17,7 +17,7 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 # 設定 Gemini
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash') # 使用更快的 flash 版本
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 def get_ai_response(user_input, mode="auto"):
     if mode == "translate":
